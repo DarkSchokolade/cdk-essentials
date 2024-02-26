@@ -1,21 +1,27 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { CdkEssentialsStack } from '../lib/cdk-essentials-stack';
+import { VpcStack } from '../lib/vpc-stack';
+import { BackendServiceStack } from '../lib/backend-service-stack';
+import * as fs from 'fs';
 
 const app = new cdk.App();
-new CdkEssentialsStack(app, 'CdkEssentialsStack', {
-  /* If you don't specify 'env', this stack will be environment-agnostic.
-   * Account/Region-dependent features and context lookups will not work,
-   * but a single synthesized template can be deployed anywhere. */
 
-  /* Uncomment the next line to specialize this stack for the AWS Account
-   * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+const configFilename = app.node.tryGetContext('config') || 'dev';
+const configData = JSON.parse(
+  fs.readFileSync(`config/${configFilename}.json`).toString()
+);
 
-  /* Uncomment the next line if you know exactly what Account and Region you
-   * want to deploy the stack to. */
-  // env: { account: '123456789012', region: 'us-east-1' },
-
-  /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+const vpcStack = new VpcStack(app, 'cdkEssentialsVpcStack', {
+  env: { account: '123456789012', region: 'ca-central-1' },
 });
+
+const backendServiceStack = new BackendServiceStack(
+  app,
+  'cdkEssentialsBackendServiceStack',
+  {
+    env: { account: '123456789012', region: 'ca-central-1' },
+    vpc: vpcStack.vpc,
+    memory: 1024,
+  }
+);
