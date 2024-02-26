@@ -1,0 +1,11 @@
+{
+  "projectName": "CdkEssentials",
+  "account": "123456789012",
+  "region": "ca-central-1",
+  "prefix": "dev",
+  "stackPrefix": "dev",
+  "backendConfig": {
+    "backendCpu": 256,
+    "backendMemroy": 1024
+  }
+}
