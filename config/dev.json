@@ -7,5 +7,19 @@
   "backendConfig": {
     "backendCpu": 256,
     "backendMemroy": 1024
-  }
+  },
+  "backendAlarmConfigs": [
+    {
+      "metric": "CPUUtilization",
+      "alarmName": "-cdk-essentials-backend-cpu-usage-alarm",
+      "threshold": 70,
+      "evaluationPeriods": 1
+    },
+    {
+      "metric": "MemoryUtilization",
+      "alarmName": "-cdk-essentials-backend-memory-usage-alarm",
+      "threshold": 70,
+      "evaluationPeriods": 1
+    }
+  ]
 }

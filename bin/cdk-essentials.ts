@@ -11,6 +11,14 @@ export interface BackendServiceProps {
   backendCpu?: number;
   backendMemroy?: number;
 }
+
+export interface AlarmConfig {
+  metric: string;
+  alarmName: string;
+  threshold: number;
+  evaluationPeriods: number;
+}
+
 export interface CommonStackProps {
   projectName: string;
   account: string;
@@ -18,6 +26,7 @@ export interface CommonStackProps {
   prefix: string;
   stackPrefix: string;
   backendConfig?: BackendServiceProps;
+  backendAlarmConfigs: AlarmConfig[];
 }
 
 const configFilename = app.node.tryGetContext('config') || 'dev';
