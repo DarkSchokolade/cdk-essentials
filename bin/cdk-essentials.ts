@@ -4,6 +4,7 @@ import * as cdk from 'aws-cdk-lib';
 import { VpcStack } from '../lib/vpc-stack';
 import { BackendServiceStack } from '../lib/backend-service-stack';
 import * as fs from 'fs';
+import { snsStack } from '../lib/sns-stack';
 
 const app = new cdk.App();
 
@@ -48,6 +49,16 @@ const vpcStack = new VpcStack(app, `${stackPrefix}VpcStack`, {
   env,
 });
 
+const alarmTopic = new snsStack(
+  app,
+  commonStackParams.stackPrefix + 'BoredButtonSnsStack',
+  {
+    env,
+    prefix: commonStackParams.stackPrefix,
+    topicName: 'alarm-topic',
+  }
+);
+
 const backendServiceStack = new BackendServiceStack(
   app,
   `${stackPrefix}BackendServiceStack`,
@@ -55,5 +66,8 @@ const backendServiceStack = new BackendServiceStack(
     env,
     vpc: vpcStack.vpc,
     memory: commonStackParams.backendConfig?.backendMemroy,
+    alarmConfigs: commonStackParams.backendAlarmConfigs,
+    alarmTopic: alarmTopic.topic,
+    stackPrefix: stackPrefix,
   }
 );

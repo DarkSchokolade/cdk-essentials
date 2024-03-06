@@ -11,13 +11,13 @@
   "backendAlarmConfigs": [
     {
       "metric": "CPUUtilization",
-      "alarmName": "-cdk-essentials-backend-cpu-usage-alarm",
+      "alarmName": "-backend-cpu-usage-alarm",
       "threshold": 70,
       "evaluationPeriods": 1
     },
     {
       "metric": "MemoryUtilization",
-      "alarmName": "-cdk-essentials-backend-memory-usage-alarm",
+      "alarmName": "-backend-memory-usage-alarm",
       "threshold": 70,
       "evaluationPeriods": 1
     }

@@ -3,12 +3,17 @@ import { Vpc } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ecs_patterns from 'aws-cdk-lib/aws-ecs-patterns';
+import { AlarmConfig } from '../bin/cdk-essentials';
+import { AlarmService } from './alarm-service';
 
 interface BackendServiceStackProps extends cdk.StackProps {
   vpc: Vpc;
   cpu?: number;
   memory?: number;
   instanceCount?: number;
+  alarmConfigs: AlarmConfig[];
+  alarmTopic: cdk.aws_sns.Topic;
+  stackPrefix: string;
 }
 
 export class BackendServiceStack extends cdk.Stack {
@@ -36,5 +41,22 @@ export class BackendServiceStack extends cdk.Stack {
           publicLoadBalancer: true, // Default is false
         }
       );
+
+    // Add AlarmService
+    props.alarmConfigs.forEach((config, index) => {
+      new AlarmService(
+        this,
+        `${props.stackPrefix}-backend-service-${config.metric}`,
+        {
+          metric: backendService.service.metric(config.metric, {
+            statistic: 'max',
+          }),
+          alarmName: props.stackPrefix + config.alarmName,
+          alarmThreshold: config.threshold,
+          alarmEvaluationPeriods: config.evaluationPeriods,
+          alarmTopic: props.alarmTopic,
+        }
+      );
+    });
   }
 }
