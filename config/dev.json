@@ -21,5 +21,8 @@
       "threshold": 70,
       "evaluationPeriods": 1
     }
-  ]
+  ],
+  "slackChannelConfigurationName": "slack-channel-name",
+  "slackWorkspaceId": "WORKSPACEID",
+  "slackChannelId": "CHANNELID"
 }

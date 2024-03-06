@@ -5,6 +5,7 @@ import { VpcStack } from '../lib/vpc-stack';
 import { BackendServiceStack } from '../lib/backend-service-stack';
 import * as fs from 'fs';
 import { snsStack } from '../lib/sns-stack';
+import { SlackChatBotStack } from '../lib/slack-chatbot-stack';
 
 const app = new cdk.App();
 
@@ -28,6 +29,9 @@ export interface CommonStackProps {
   stackPrefix: string;
   backendConfig?: BackendServiceProps;
   backendAlarmConfigs: AlarmConfig[];
+  slackChannelConfigurationName: string;
+  slackWorkspaceId: string;
+  slackChannelId: string;
 }
 
 const configFilename = app.node.tryGetContext('config') || 'dev';
@@ -69,5 +73,20 @@ const backendServiceStack = new BackendServiceStack(
     alarmConfigs: commonStackParams.backendAlarmConfigs,
     alarmTopic: alarmTopic.topic,
     stackPrefix: stackPrefix,
+  }
+);
+
+// AWS chatbot stack: to send messages to slack.
+const slackChatBotStack = new SlackChatBotStack(
+  app,
+  `${stackPrefix}SlackChatBotStack`,
+  {
+    env,
+    prefix: stackPrefix,
+    alarmTopics: [alarmTopic.topic],
+    slackChannelConfigurationName:
+      commonStackParams.slackChannelConfigurationName,
+    slackWorkspaceId: commonStackParams.slackWorkspaceId,
+    slackChannelId: commonStackParams.slackChannelId,
   }
 );
