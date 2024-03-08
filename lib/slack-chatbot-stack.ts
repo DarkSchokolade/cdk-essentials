@@ -38,7 +38,7 @@ export class SlackChatBotStack extends cdk.Stack {
   }
 
   private createRole(): cdk.aws_iam.Role {
-    const role = new Role(this, 'BoredButtonSlackBotRole', {
+    const role = new Role(this, 'CdkEssentialsSlackBotRole', {
       assumedBy: new ServicePrincipal('chatbot.amazonaws.com'),
       description: 'Role for AWS ChatBot',
       managedPolicies: [
